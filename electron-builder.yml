@@ -1,0 +1,36 @@
+appId: com.example.electronapp
+productName: Electron App
+directories:
+  output: release
+files:
+  - out/**
+  - package.json
+  - '!node_modules/**/*'
+asar: true
+npmRebuild: false
+win:
+  target:
+    - nsis
+    - portable
+  artifactName: ${name}-${version}-${arch}.${ext}
+nsis:
+  artifactName: ${name}-${version}-setup.${ext}
+  shortcutName: ${productName}
+  createDesktopShortcut: always
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+portable:
+  artifactName: ${name}-${version}-portable.${ext}
+mac:
+  target:
+    - dmg
+    - zip
+  category: public.app-category.utilities
+  artifactName: ${name}-${version}-${arch}.${ext}
+linux:
+  target:
+    - AppImage
+    - deb
+  category: Utility
+  artifactName: ${name}-${version}-${arch}.${ext}
+
