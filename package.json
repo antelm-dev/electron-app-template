@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Lightweight Electron starter with Vite, Rollup, typed IPC, and electron-builder.",
   "author": "Your Name",
+  "license": "MIT",
   "private": true,
   "type": "module",
   "main": "./out/main/index.cjs",
