@@ -134,3 +134,11 @@ const settings = await window.ipc.settings.read();
 ## Security defaults
 
 The starter enables context isolation and renderer sandboxing, disables Node integration, and bundles the preload into one CommonJS file. Keep those defaults unless the application has a reviewed reason to change them.
+
+### Fuses
+
+`scripts/after-pack.js` runs as an electron-builder `afterPack` hook and burns Electron's fuses into the packaged binary before code signing. Fuses are build-time kill switches for capabilities that the sandbox and CSP cannot reach: without them a packaged app can be relaunched as a plain Node process with `ELECTRON_RUN_AS_NODE=1`, or handed arbitrary flags through `NODE_OPTIONS`, which sidesteps everything in `src/main`.
+
+The hook disables `RunAsNode`, `EnableNodeOptionsEnvironmentVariable`, and `EnableNodeCliInspectArguments`, and enables `EnableCookieEncryption` and `OnlyLoadAppFromAsar`.
+
+`EnableEmbeddedAsarIntegrityValidation` is deliberately left unset. It requires integrity metadata that electron-builder only emits on some platforms, and a mismatch prevents the application from launching at all. Turn it on once you have code signing configured and a packaged build you can verify.
