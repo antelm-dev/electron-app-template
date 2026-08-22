@@ -2,8 +2,9 @@ import { app, type BrowserWindow } from "electron";
 import { join } from "node:path";
 
 import { createIpcContainer } from "electron-ipc-module";
+import { createRendererProtocol } from "electron-renderer-protocol";
+
 import { bootstrapApp } from "./core/bootstrap.js";
-import { createRendererProtocol } from "./core/renderer-protocol.js";
 import {
   applyNavigationPolicy,
   createAppUrlChecker,

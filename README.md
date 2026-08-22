@@ -4,7 +4,8 @@ A small, secure Electron starter built with:
 
 - [Vite](https://vite.dev/) and Rollup for one lightweight main/preload/renderer configuration
 - [electron-ipc-module](https://github.com/antelm-dev/electron-ipc-module) for generated, type-safe IPC
-- [electron-run](https://github.com/antelm-dev/electron-run) for robust Electron restart and shutdown
+- [vite-plugin-electron-run](https://github.com/antelm-dev/electron-run) for robust Electron restart and shutdown
+- [electron-renderer-protocol](https://github.com/antelm-dev/electron-renderer-protocol) for the hardened production renderer origin
 - [electron-builder](https://www.electron.build/) for distributable packages
 - TypeScript and a framework-neutral vanilla renderer
 
@@ -23,14 +24,14 @@ pnpm install
 pnpm dev
 ```
 
-The renderer gets native Vite HMR. A Rollup watcher builds preload and main code; changes restart Electron through `electron-run` only after both outputs are ready.
+The renderer gets native Vite HMR. A Rollup watcher builds preload and main code; changes restart Electron through `vite-plugin-electron-run` only after both outputs are ready.
 
 ## Commands
 
 ```bash
 pnpm dev          # development server, Electron, and watch mode
 pnpm typecheck    # regenerate IPC bridge and check every process and test
-pnpm test         # protocol, navigation, and lifecycle tests
+pnpm test         # navigation and lifecycle tests
 pnpm build        # typecheck, test, and production build into out/
 pnpm preview      # build and run the production output
 pnpm pack         # unpacked application for the current platform
@@ -49,7 +50,6 @@ src/
 ├── main/
 │   ├── core/
 │   │   ├── bootstrap.ts
-│   │   ├── renderer-protocol.ts
 │   │   └── window-security.ts
 │   ├── index.ts
 │   └── ipc/*.ipc.ts
@@ -61,7 +61,7 @@ src/
     └── src/
 ```
 
-`vite.config.ts` is the single build configuration. Vite owns the renderer while a small in-file plugin coordinates Rollup for preload and main. The IPC and electron-run plugins are attached to the main watcher. The preload exposes only the generated narrow bridge; it does not expose Electron's raw `ipcRenderer` API.
+`vite.config.ts` is the single build configuration. Vite owns the renderer while `vite-plugin-electron-run` builds preload and main, watches both, and manages Electron. The IPC generator remains scoped to the main target. The preload exposes only the generated narrow bridge; it does not expose Electron's raw `ipcRenderer` API.
 
 The generated bridge is committed intentionally so renderer types remain available before the first build and `pnpm check:ipc` can detect drift in CI.
 
@@ -73,16 +73,17 @@ The generated bridge is committed intentionally so renderer types remain availab
 
 Development pages load from the Vite server. A packaged application loads from `app://bundle/`, which gives the renderer a standard, secure origin instead of `file://`.
 
-The protocol handler:
+`createRendererProtocol` comes from `electron-renderer-protocol`. The handler:
 
 - accepts only the exact configured scheme and host
 - permits only `GET` and `HEAD`
 - rejects malformed encoding, encoded separators, backslashes, null bytes, and paths outside the renderer directory
 - sends an explicit Content Security Policy, MIME types, and `X-Content-Type-Options: nosniff`
+- streams bodies through Chromium's own `file:` loader, so byte ranges and `Content-Length` come from the platform
 - returns `404` for missing asset files
 - falls back to `index.html` only for extensionless SPA routes
 
-Change the scheme and host in `src/main/index.ts` if your application needs branded URLs. Keep the directory pointed at Vite's renderer output.
+Change the scheme, host, or `contentSecurityPolicy` in `src/main/index.ts` if your application needs branded URLs or a different policy. Keep the directory pointed at Vite's renderer output.
 
 ### Window security
 

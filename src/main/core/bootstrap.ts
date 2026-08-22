@@ -1,6 +1,6 @@
 import { app, BrowserWindow, dialog, protocol } from "electron";
 
-import type { RendererProtocol } from "./renderer-protocol.js";
+import type { RendererProtocol } from "electron-renderer-protocol";
 
 type MaybePromise<T> = T | Promise<T>;
 
