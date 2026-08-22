@@ -13,4 +13,3 @@
   },
   "include": ["src/renderer/**/*.ts", "src/preload/generated/ipc-bridge.ts"]
 }
-

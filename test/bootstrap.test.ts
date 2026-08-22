@@ -82,8 +82,7 @@ describe("bootstrapApp", () => {
         register: vi.fn(),
         unregister,
       },
-      createWindow: () =>
-        ({ once: vi.fn(), isDestroyed: () => false } as any),
+      createWindow: () => ({ once: vi.fn(), isDestroyed: () => false }) as any,
       dispose: () => cleanup,
     });
     await controller.started;

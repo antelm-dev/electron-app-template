@@ -32,4 +32,3 @@ linux:
     - deb
   category: Utility
   artifactName: ${name}-${version}-${arch}.${ext}
-

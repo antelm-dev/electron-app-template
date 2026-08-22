@@ -64,7 +64,9 @@ export function bootstrapApp(options: BootstrapOptions): AppController {
           await options.initialize?.();
           await createMainWindow();
         } catch (error) {
-          await dispose().catch((cleanupError: unknown) => console.error("Cleanup failed", cleanupError));
+          await dispose().catch((cleanupError: unknown) =>
+            console.error("Cleanup failed", cleanupError),
+          );
           dialog.showErrorBox(
             options.errorTitle ?? "Application could not start",
             error instanceof Error ? error.message : String(error),

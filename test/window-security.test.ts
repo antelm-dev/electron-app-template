@@ -5,10 +5,7 @@ vi.mock("electron", () => ({
   shell: { openExternal: vi.fn() },
 }));
 
-import {
-  createAppUrlChecker,
-  isAllowedExternalUrl,
-} from "../src/main/core/window-security.js";
+import { createAppUrlChecker, isAllowedExternalUrl } from "../src/main/core/window-security.js";
 
 describe("window URL policies", () => {
   it("matches an exact custom-protocol origin in production", () => {
@@ -44,4 +41,3 @@ describe("window URL policies", () => {
     expect(isAllowedExternalUrl("file:///secret.txt")).toBe(false);
   });
 });
-

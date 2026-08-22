@@ -7,4 +7,3 @@
   },
   "include": ["test/**/*.ts", "src/main/core/**/*.ts"]
 }
-

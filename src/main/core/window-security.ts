@@ -1,6 +1,9 @@
 import { BrowserWindow, shell, type BrowserWindowConstructorOptions } from "electron";
 
-export interface SecureWindowOptions extends Omit<BrowserWindowConstructorOptions, "webPreferences"> {
+export interface SecureWindowOptions extends Omit<
+  BrowserWindowConstructorOptions,
+  "webPreferences"
+> {
   preload: string;
   webPreferences?: Omit<
     NonNullable<BrowserWindowConstructorOptions["webPreferences"]>,
@@ -70,4 +73,3 @@ export function applyNavigationPolicy(window: BrowserWindow, policy: NavigationP
   window.webContents.on("will-navigate", preventUnknownNavigation);
   window.webContents.on("will-redirect", preventUnknownNavigation);
 }
-

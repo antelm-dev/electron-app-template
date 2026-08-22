@@ -17,8 +17,7 @@ body {
   place-items: center;
   background:
     radial-gradient(circle at 20% 20%, #363d8a 0, transparent 35%),
-    radial-gradient(circle at 80% 75%, #1d7a72 0, transparent 32%),
-    #0b1020;
+    radial-gradient(circle at 80% 75%, #1d7a72 0, transparent 32%), #0b1020;
 }
 
 main {
@@ -74,4 +73,3 @@ h1 {
     padding: 36px 28px;
   }
 }
-
