@@ -41,7 +41,20 @@ pnpm dist:mac     # macOS targets (run on macOS)
 pnpm dist:linux   # Linux targets (run on Linux)
 ```
 
-The included GitHub Actions workflow checks generated IPC drift and performs a clean production build on pushes and pull requests.
+The CI workflow checks generated IPC drift, formatting, and lint, then performs a clean production build on pushes and pull requests.
+
+## Releasing
+
+Push a `v*` tag and the release workflow packages the application on Windows, macOS, and Linux in parallel, then attaches the installers to a GitHub Release:
+
+```bash
+pnpm version minor   # or major / patch
+git push --follow-tags
+```
+
+Run it from the Actions tab with **Run workflow** to exercise packaging on all three platforms without cutting a tag; the release step is skipped for non-tag runs.
+
+Builds are unsigned. `CSC_IDENTITY_AUTO_DISCOVERY: false` stops electron-builder from probing an empty CI keychain and failing the macOS build. Remove it once `CSC_LINK` and `CSC_KEY_PASSWORD` are configured as repository secrets.
 
 ## Project layout
 
